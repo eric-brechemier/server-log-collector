@@ -34,7 +34,7 @@ All parameters are required:
   * `--to-date` - last modification date for the logs to collect,
                   in ISO format YYYY-MM-DD
 
-This scripts connects to the remote user with SSH with forwarding of the
+This script connects to the remote user with SSH with forwarding of the
 authentication agent connection enabled (-A flag), then runs commands using
 sudo, based on the assumption that logs are only accessible by admin users.
 If you have configured [sudo authentication using SSH agent forwarding, no
