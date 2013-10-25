@@ -26,7 +26,7 @@ All parameters are required:
 
   * `--as-sudoer` - remote user part of sudoers
   * `--from-directory` - absolute path to the logs directory on remote server
-  * `--to-directory` - path to the local folder for collected logs,
+  * `--to-directory` - output folder for collected logs,
                        absolute or relative to current folder,
                        which will be created if missing
   * `--from-date` - first modification date for the logs to collect,
