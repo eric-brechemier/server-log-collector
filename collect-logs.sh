@@ -24,14 +24,16 @@
 # * --to-date - last modification date for the logs to collect,
 #                 in ISO format YYYY-MM-DD
 
+set -eu
+
 usage="Usage:
 # Copy nginx logs from June 2013 to /tmp/nginx-2013-06
 collect-logs.sh \\
-  --as-sudoer user@hostname \\
-  --from-directory /var/log/nginx \\
-  --to-directory /tmp/nginx-2013-06 \\
-  --from-date 2013-06-01 \\
-  --to-date 2013-06-30"
+--as-sudoer user@hostname \\
+--from-directory /var/log/nginx \\
+--to-directory /tmp/nginx-2013-06 \\
+--from-date 2013-06-01 \\
+--to-date 2013-06-30"
 
 asSudoer=''
 fromDirectory=''
@@ -82,4 +84,47 @@ then
   exit 1
 fi
 
-# Work In Progress
+fromDateInt=$(printf %b "$fromDate" | tr -d '-')
+toDateInt=$(printf %b "$toDate" | tr -d '-')
+
+echo "Change to directory $toDirectory"
+mkdir -p "$toDirectory"
+cd "$toDirectory"
+
+echo "Select logs from $fromDate to $toDate as $asSudoer"
+remoteArchive=$(cat << EOF | ssh -A -T "$asSudoer" | tail -n 1)
+  cd "$fromDirectory" &&
+  remoteArchive=$(mktemp --suffix=.tar.gz) &&
+  sudo find . -type f -printf "%TY%Tm%Td %p\n" |
+  while read -r fileDateInt fileName
+  do
+    if test "$fromDateInt" -le "\$fileDateInt" \
+         -a "\$fileDateInt" -le "$toDateInt"
+    then
+      echo "\$fileName"
+    fi
+  done |
+  xargs sudo tar czf "\$remoteArchive" &&
+  echo "\$remoteArchive" || echo "FAILED"
+EOF
+
+if test "FAILED" = "$remoteArchive"
+then
+  echo "Failed to save logs in remote archive"
+  exit 1
+fi
+
+localArchive=$(mktemp --suffix=.tar.gz)
+echo "Copy remote archive $asSudoer:$remoteArchive to local archive $localArchive"
+scp "$asSudoer:$remoteArchive" "$localArchive"
+
+echo "Extract logs from temporary archive $localArchive"
+tar xf "$localArchive"
+
+echo "Delete local archive $localArchive"
+rm -f "$localArchive"
+
+echo "Delete remote archive $asSudoer:$remoteArchive"
+ssh -A "$asSudoer" "sudo rm $remoteArchive"
+
+echo "Complete: logs extracted to $toDirectory"
