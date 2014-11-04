@@ -37,8 +37,9 @@ All parameters are required:
 This script connects to the remote user using SSH with forwarding of the
 authentication agent connection enabled (-A flag), then runs commands using
 sudo, based on the assumption that logs are only accessible by admin users.
-If you have configured [sudo authentication using SSH agent forwarding, no
-password will be requested. Otherwise, you will be prompted for a password.
+If you have configured [sudo authentication using SSH agent forwarding]
+(http://www.evans.io/posts/ssh-agent-for-sudo-authentication/), no password
+will be requested. Otherwise, you will be prompted for a password.
 
 ## AUTHOR ##
 
