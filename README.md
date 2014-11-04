@@ -41,6 +41,11 @@ If you have configured [sudo authentication using SSH agent forwarding]
 (http://www.evans.io/posts/ssh-agent-for-sudo-authentication/), no password
 will be requested. Otherwise, you will be prompted for a password.
 
+The log files are selected on the server, packed as a tar.gz archive
+in a temporary location on the server, then copied back to the local system
+using `scp` and expanded into the target directory. Temporary archives used
+for the transfer are then deleted.
+
 ## AUTHOR ##
 
 Eric Bréchemier <github@eric.brechemier.name>
