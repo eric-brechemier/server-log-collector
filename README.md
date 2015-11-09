@@ -10,7 +10,10 @@ Shell (dash)
 
 ## TARGET PLATFORM ##
 
-Ubuntu 12.04 LTS (for both client and server)
+Ubuntu 12.04 LTS running dash (for both client and server)
+
+Updated version tested with Mac OS X 10.10 running GNU bash 3.2 (client)
+and Ubuntu 14.04 LTS running GNU bash 4.3 (server).
 
 ## USAGE ##
 
