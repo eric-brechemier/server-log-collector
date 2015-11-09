@@ -18,7 +18,7 @@ and Ubuntu 14.04 LTS running GNU bash 4.3 (server).
 ## USAGE ##
 
     # Copy nginx logs from June 2013 to /tmp/nginx-2013-06
-    collect-logs.sh \
+    ./collect-logs.sh \
       --as-sudoer user@hostname \
       --from-directory /var/log/nginx \
       --to-directory /tmp/nginx-2013-06 \
