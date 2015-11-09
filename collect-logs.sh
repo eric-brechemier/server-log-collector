@@ -91,11 +91,14 @@ echo "Change to directory $toDirectory"
 mkdir -p "$toDirectory"
 cd "$toDirectory"
 
+scriptName="$(basename "$0" '.sh')"
+templateTempFileName="/tmp/$scriptName.tar.gz.XXXXXX"
+
 echo "Select logs from $fromDate to $toDate as $asSudoer"
 remoteArchive=$(
   cat << EOF | ssh -A -T "$asSudoer" | tail -n 1
   cd "$fromDirectory" &&
-  remoteArchive=\$(mktemp --suffix=.tar.gz) &&
+  remoteArchive=\$(mktemp '$templateTempFileName') &&
   sudo find . -type f -printf "%TY%Tm%Td %p\n" |
   while read -r fileDateInt fileName
   do
@@ -116,7 +119,7 @@ then
   exit 1
 fi
 
-localArchive=$(mktemp --suffix=.tar.gz)
+localArchive="$(mktemp "$templateTempFileName")"
 echo "Copy remote archive $asSudoer:$remoteArchive to local archive $localArchive"
 scp "$asSudoer:$remoteArchive" "$localArchive"
 
