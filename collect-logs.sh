@@ -92,9 +92,10 @@ mkdir -p "$toDirectory"
 cd "$toDirectory"
 
 echo "Select logs from $fromDate to $toDate as $asSudoer"
-remoteArchive=$(cat << EOF | ssh -A -T "$asSudoer" | tail -n 1)
+remoteArchive=$(
+  cat << EOF | ssh -A -T "$asSudoer" | tail -n 1
   cd "$fromDirectory" &&
-  remoteArchive=$(mktemp --suffix=.tar.gz) &&
+  remoteArchive=\$(mktemp --suffix=.tar.gz) &&
   sudo find . -type f -printf "%TY%Tm%Td %p\n" |
   while read -r fileDateInt fileName
   do
@@ -107,6 +108,7 @@ remoteArchive=$(cat << EOF | ssh -A -T "$asSudoer" | tail -n 1)
   xargs sudo tar czf "\$remoteArchive" &&
   echo "\$remoteArchive" || echo "FAILED"
 EOF
+)
 
 if test "FAILED" = "$remoteArchive"
 then
