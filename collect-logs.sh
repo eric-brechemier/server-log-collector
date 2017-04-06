@@ -104,7 +104,7 @@ remoteArchive=$(
     if test '$fromDateInt' -le "\$fileDateInt" \
          -a "\$fileDateInt" -le '$toDateInt'
     then
-      echo "\$( basename "\$fileName" )"
+      echo "\${fileName#${fromDirectory%%/}/}"
     fi
   done |
   xargs sudo tar czf "\$remoteArchive" -C '$fromDirectory' &&
