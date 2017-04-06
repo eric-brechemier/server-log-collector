@@ -79,8 +79,8 @@ if test -z "asSudoer" \
      -o -z "$fromDate" \
      -o -z "$toDate"
 then
-  echo "$usage"
-  echo "All parameters are mandatory."
+  echo "$usage" 1>&2
+  echo "All parameters are mandatory." 1>&2
   exit 1
 fi
 
@@ -115,7 +115,7 @@ EOF
 
 if test "FAILED" = "$remoteArchive"
 then
-  echo "Failed to save logs in remote archive"
+  echo "Failed to save logs in remote archive" 1>&2
   exit 1
 fi
 
