@@ -97,18 +97,17 @@ templateTempFileName="/tmp/$scriptName.tar.gz.XXXXXX"
 echo "Select logs from $fromDate to $toDate as $asSudoer"
 remoteArchive=$(
   cat << EOF | ssh -A -T "$asSudoer" | tail -n 1
-  cd "$fromDirectory" &&
   remoteArchive=\$(mktemp '$templateTempFileName') &&
-  sudo find . -type f -printf "%TY%Tm%Td %p\n" |
+  sudo find '$fromDirectory' -type f -printf "%TY%Tm%Td %p\n" |
   while read -r fileDateInt fileName
   do
     if test "$fromDateInt" -le "\$fileDateInt" \
          -a "\$fileDateInt" -le "$toDateInt"
     then
-      echo "\$fileName"
+      echo "\$( basename "\$fileName" )"
     fi
   done |
-  xargs sudo tar czf "\$remoteArchive" &&
+  xargs sudo tar czf "\$remoteArchive" -C '$fromDirectory' &&
   echo "\$remoteArchive" || echo "FAILED"
 EOF
 )
