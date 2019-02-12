@@ -107,7 +107,7 @@ remoteArchive=$(
       echo "\${fileName#${fromDirectory%%/}/}"
     fi
   done |
-  xargs sudo tar czf "\$remoteArchive" -C '$fromDirectory'
+  sudo tar czf "\$remoteArchive" -C '$fromDirectory' --files-from -
   if test -s "\$remoteArchive"
   then
     echo "\$remoteArchive"
