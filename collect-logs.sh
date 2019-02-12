@@ -107,8 +107,14 @@ remoteArchive=$(
       echo "\${fileName#${fromDirectory%%/}/}"
     fi
   done |
-  xargs sudo tar czf "\$remoteArchive" -C '$fromDirectory' &&
-  echo "\$remoteArchive" || echo "FAILED"
+  xargs sudo tar czf "\$remoteArchive" -C '$fromDirectory'
+  if test -s "\$remoteArchive"
+  then
+    echo "\$remoteArchive"
+  else
+    rm "\$remoteArchive"
+    echo "FAILED"
+  fi
 EOF
 )
 
